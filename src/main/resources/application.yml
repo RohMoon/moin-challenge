@@ -24,5 +24,9 @@ springdoc:
   swagger-ui:
     path: swagger-ui
     operations-sorter: method
-    tags-sorter : alpha
+    tags-sorter: alpha
     disable-swagger-default-url: true
+
+jwt:
+  secretKey: "QyNvbmc4aW9ucyYteW91LXdFcmUtYWxsLTEhbDBuMiE="
+  expiration: 1800000
