@@ -1,12 +1,13 @@
 package com.moinchallenge;
 
+import com.moinchallenge.config.EncryptionProperties;
 import com.moinchallenge.config.JwtProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({JwtProperties.class})
+@EnableConfigurationProperties({JwtProperties.class, EncryptionProperties.class})
 public class MoinChallengeApplication {
 
     public static void main(String[] args) {
