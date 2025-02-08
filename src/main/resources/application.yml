@@ -30,3 +30,6 @@ springdoc:
 jwt:
   secretKey: "QyNvbmc4aW9ucyYteW91LXdFcmUtYWxsLTEhbDBuMiE="
   expiration: 1800000
+
+encryption:
+  secretKey : "LSNCZXlvbmQtdGhlLW1vb24jMDchMjJCYUNFU1NLRVk="
