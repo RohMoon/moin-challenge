@@ -1,10 +1,7 @@
 package com.moinchallenge.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moinchallenge.config.GlobalExceptionHandler;
-import com.moinchallenge.controller.UserRestController;
 import com.moinchallenge.dto.request.SignRequest;
-import com.moinchallenge.repository.UserRepository;
-import com.moinchallenge.service.EncryptionService;
 import com.moinchallenge.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,10 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class UserRestControllerTest {
+class UserRestControllerSignupTest {
 
     private MockMvc mockMvc;
 
