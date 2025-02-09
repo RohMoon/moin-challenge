@@ -14,6 +14,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EncryptionService encryptionService;
+    private final JwtService jwtService;
 
     public void signup(SignRequest request) {
         if (request.getUserId() == null || request.getPassword() == null
@@ -32,7 +33,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         //주민등록번호 / 사업자 번호 암호화
-        String encryptedIdValue =  encryptionService.encrypt(request.getIdValue());
+        String encryptedIdValue = encryptionService.encrypt(request.getIdValue());
 
         User user = User.builder()
                 .userId(request.getUserId())
@@ -42,5 +43,16 @@ public class UserService {
                 .idValue(encryptedIdValue)
                 .build();
         userRepository.save(user);
+    }
+
+    public String login(String userId, String rawPassword) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+        }
+
+        return jwtService.generateToken(userId);
     }
 }

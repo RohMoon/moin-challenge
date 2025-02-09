@@ -22,11 +22,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ CORS 설정 추가
-                .csrf(AbstractHttpConfigurer::disable) // ✅ CSRF 비활성화 (테스트용)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/user/signup", // ✅ 회원가입 허용
+                                "/user/login",
+                                "/user/signup",
                                 "/swagger-ui/**",
                                 "/api-docs/**",
                                 "/swagger-resources/**",
