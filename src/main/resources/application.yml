@@ -5,7 +5,7 @@ spring:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sangMoon
-    password:
+    password: 1234
 
   jpa:
     hibernate:
@@ -18,10 +18,18 @@ spring:
       enabled: true
       path: /h2-console
 
+  security:
+    user:
+      name: user
+      password: "$2a$10$l49YJqdf5NVX7IeBYWNS6eYTfaLPGd7V1m.YLa1cZzghBPqlOQPjS"
+
 springdoc:
   api-docs:
     path: /api-docs
+    enabled : true
+
   swagger-ui:
+    enabled: true
     path: swagger-ui
     operations-sorter: method
     tags-sorter: alpha

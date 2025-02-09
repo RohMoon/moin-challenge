@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -30,7 +30,7 @@ public class UserService {
 
         //비밀번호 해싱
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-        
+
         //주민등록번호 / 사업자 번호 암호화
         String encryptedIdValue =  encryptionService.encrypt(request.getIdValue());
 

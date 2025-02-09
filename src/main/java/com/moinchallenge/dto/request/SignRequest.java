@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class SignRequest {
 
     @NotBlank(message = "이메일을 입력해야 합니다.")
@@ -24,7 +24,7 @@ public class SignRequest {
     private String name;
 
     @NotBlank(message = "ID 유형을 입력해야 합니다.")
-    @Pattern(regexp = "REG_NO | BUSINESS_NO",
+    @Pattern(regexp = "REG_NO|BUSINESS_NO",
             message = "ID 유형은 'REG_NO', 'BUSINESS_NO' 만 가능합니다.")
     private String idType;
 
