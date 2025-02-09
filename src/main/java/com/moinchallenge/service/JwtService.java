@@ -50,12 +50,12 @@ public class JwtService {
 
     public String getUserIdFromToken(String token) {
         try {
-            var result = Jwts.parser()
-                    .verifyWith(secretKey)
+            var claims = Jwts.parser()
+                    .setSigningKey(secretKey)
                     .build()
-                    .parseSignedClaims(token);
-            String userId = "...";
-            return userId;
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get("username", String.class);
         } catch (Exception e) {
             return null;
         }
