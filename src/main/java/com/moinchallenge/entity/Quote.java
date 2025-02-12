@@ -21,10 +21,18 @@ public class Quote {            // 저장없이 REDIS 저장 고려
     private LocalDateTime expireTime;
 
     @Enumerated(EnumType.STRING)
-    private Currency targetCurrency;
+    private Currency currency;
     private Long sourceAmount;
     private Double exchangeRate;
     private Double targetAmount;
+
+    public long getFee() {
+        return calculateFee(this.sourceAmount, this.currency);
+    }
+
+    public boolean isExpired(LocalDateTime now) {
+        return this.expireTime.isBefore(now);
+    }
 
     public static Quote create(
             long amount,
@@ -41,7 +49,7 @@ public class Quote {            // 저장없이 REDIS 저장 고려
         // 1~1,000,000 => 1000원 + 0.2%
         // 1,000,000 초과 => 3000원 + 0.1%
         // JPY => 고정 3000, 0.5%
-        double fee = calculateFee(amount, targetCurrency);
+        long fee = calculateFee(amount, targetCurrency);
 
         // 3) 순액(net) = amount - fee
         double netRemittanceAmount = amount - fee;
@@ -66,7 +74,7 @@ public class Quote {            // 저장없이 REDIS 저장 고려
                 .exchangeRate(exchangeRate)
                 .expireTime(expireAt)
                 .targetAmount(targetAmount)
-                .targetCurrency(targetCurrency)
+                .currency(targetCurrency)
                 .build();
     }
 
@@ -86,18 +94,18 @@ public class Quote {            // 저장없이 REDIS 저장 고려
     /**
      * 통화별 수수료 계산
      */
-    public static double calculateFee(long amount, Currency targetCurrency) {
+    private static long calculateFee(long amount, Currency targetCurrency) {
         if (Currency.USD == targetCurrency) {
             if (amount <= 1_000_000) {
                 // fixed=1000, rate=0.2%
-                return amount * 0.002 + 1000;
+                return (long) (amount * 0.002 + 1000);
             } else {
                 // fixed=3000, rate=0.1%
-                return amount * 0.001 + 3000;
+                return (long) (amount * 0.001 + 3000);
             }
         } else if (Currency.JPY == targetCurrency) {
             // 고정 3000, 수수료율 0.5%
-            return amount * 0.005 + 3000;
+            return (long) (amount * 0.005 + 3000);
         } else {
             // 과제에서는 USD, JPY만 예시지만 확장 시 여기 추가
             throw new IllegalArgumentException("지원하지 않는 통화입니다.");

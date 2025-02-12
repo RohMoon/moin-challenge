@@ -1,6 +1,7 @@
 package com.moinchallenge.entity;
 
 import com.moinchallenge.config.PersonalInfoEncryptor;
+import com.moinchallenge.constant.IdType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -17,14 +18,15 @@ public class User {
     private Long id;
 
     //userID = 이메일(unique)
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String userId; // 암호화 필요?
 
     private String password; //암호화 필요
 
-    private String idType;
+    @Enumerated(EnumType.STRING)
+    private IdType idType;
 
-//    @Convert(converter = PersonalInfoEncryptor.class) //JPA가 관리하기 때문에 충돌 잠재적 위험
+    //    @Convert(converter = PersonalInfoEncryptor.class) //JPA가 관리하기 때문에 충돌 잠재적 위험
     private String idValue;
 
     private String name;
@@ -32,5 +34,7 @@ public class User {
     //    @Convert(converter = PersonalInfoEncryptor.class)
 //    private String residentRegistrationNumber;
 
-
+    public boolean canTransfer(double newSum) {
+        return newSum <= idType.getLimitAmount();
+    }
 }
