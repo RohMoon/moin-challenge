@@ -25,11 +25,11 @@ public class JwtService {
         );
     }
 
-    public String generateToken(String username){
+    public String generateToken(String userId){
         Instant now = Instant.now().atZone(ZoneId.of("Asia/Seoul")).toInstant();
         Instant expirationTime = now.plusMillis(jwtProperties.getExpiration());
         return Jwts.builder()
-                .claims(Map.of("username",username))
+                .claims(Map.of("userId",userId))
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expirationTime))
                 .signWith(secretKey)

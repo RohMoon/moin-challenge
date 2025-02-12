@@ -13,9 +13,8 @@ import lombok.NoArgsConstructor;
 public class QuoteRequest {
     @NotNull(message = "송금 금액을 입력해야 합니다.")
     @Positive(message = "송금액은 1원 이상이어야 합니다.")
-    private Integer amount;
+    private long amount;
 
     @NotNull(message = "목표 통화를 입력해야 합니다.")
     private String targetCurrency;
-
 }

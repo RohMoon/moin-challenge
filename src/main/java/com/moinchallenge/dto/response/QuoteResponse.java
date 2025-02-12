@@ -1,25 +1,33 @@
 package com.moinchallenge.dto.response;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.moinchallenge.entity.Quote;
+import lombok.*;
 
 @Getter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuoteResponse {
-    private String quoteId;
+    private Long quoteId;
     private Double exchangeRate;
     private String expireTime;
     private Double targetAmount;
 
     public static QuoteResponse of(
-            String quoteId,
+            Long quoteId,
             Double exchangeRate,
             String expireTime,
             Double targetAmount
     ) {
         return new QuoteResponse(quoteId, exchangeRate, expireTime, targetAmount);
+    }
+
+    public static QuoteResponse from(Quote quote) {
+        return QuoteResponse.builder()
+                .quoteId(quote.getId())
+                .exchangeRate(quote.getExchangeRate())
+                .expireTime(quote.getExpireTime().toString())
+                .targetAmount(quote.getTargetAmount())
+                .build();
     }
 }
