@@ -3,8 +3,6 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 COPY gradle gradle
-COPY build.gradle .
-COPY settings.gradle .
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 
