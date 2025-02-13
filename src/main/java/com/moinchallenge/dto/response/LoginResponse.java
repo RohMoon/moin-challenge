@@ -8,10 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class LoginResponse {
-    private int resultCode;
-    private String resultMsg;
+public class LoginResponse extends BaseResponse{
     private String token;
+
+    protected LoginResponse(int resultCode, String resultMsg, String token) {
+        super(resultCode, resultMsg);
+        this.token = token;
+    }
 
     public static LoginResponse of(int resultCode, String resultMsg, String token) {
         return new LoginResponse(resultCode, resultMsg, token);
