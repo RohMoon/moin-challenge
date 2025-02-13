@@ -1,12 +1,10 @@
 package com.moinchallenge.controller;
 
 import com.moinchallenge.dto.request.QuoteRequest;
-import com.moinchallenge.dto.request.TransferRequest;
-import com.moinchallenge.dto.response.ApiResponse;
-import com.moinchallenge.dto.response.DataResponse;
+import com.moinchallenge.dto.response.BaseResponse;
 import com.moinchallenge.dto.response.QuoteResponse;
+import com.moinchallenge.dto.response.QuoteWrapperResponse;
 import com.moinchallenge.service.QuoteService;
-import com.moinchallenge.service.TransferService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -31,17 +29,9 @@ public class QuoteRestController {
     )
     @PostMapping("/quote")
     public ResponseEntity<?> getQuote(@RequestBody @Valid QuoteRequest request) {
-        try {
             QuoteResponse quote = quoteService.calculateQuote(request);
             return ResponseEntity.ok()
-                    .body(DataResponse.of(200, "OK", quote));
+                    .body(QuoteWrapperResponse.of(200, "OK", quote));
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.of(400, e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.of(500, "알 수 없는 에러 입니다."));
-        }
     }
 }

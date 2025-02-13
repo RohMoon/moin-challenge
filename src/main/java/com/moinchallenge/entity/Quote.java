@@ -1,6 +1,7 @@
 package com.moinchallenge.entity;
 
 import com.moinchallenge.constant.Currency;
+import com.moinchallenge.exception.NegativeNumberException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -117,13 +118,13 @@ public class Quote {            // 저장없이 REDIS 저장 고려
     private static class QuoteValidator {
         private static void validAmountIsPositive(long amount) {
             if (amount <= 0) {
-                throw new IllegalArgumentException("송금액은 0 또는 음수가 될 수 없습니다.");
+                throw new NegativeNumberException("송금액은 음수가 될 수 없습니다.");
             }
         }
 
         private static void validNetAmountIsPositive(double netAmount) {
             if (netAmount < 0) {
-                throw new IllegalArgumentException("수수료를 제외한 송금액이 0보다 작을 수 없습니다.");
+                throw new NegativeNumberException("수수료를 제외한 송금액이 0보다 작을 수 없습니다.");
             }
         }
 
