@@ -4,16 +4,15 @@ import com.moinchallenge.constant.Currency;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.nio.DoubleBuffer;
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Builder
 @AllArgsConstructor
-@Table(name="history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class History {
+@Table(name="transferHistory")
+public class TransferHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +29,8 @@ public class History {
     private Double targetAmount;
     private LocalDateTime requestedDate;
 
-    public static History createFromQuote(Long userPk, Quote quote, LocalDateTime now){
-        return History.builder()
+    public static TransferHistory createFromQuote(Long userPk, Quote quote, LocalDateTime now){
+        return TransferHistory.builder()
                 .userPk(userPk)
                 .sourceAmount(quote.getSourceAmount())
                 .fee(quote.getFee())

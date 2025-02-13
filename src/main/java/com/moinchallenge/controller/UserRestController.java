@@ -5,6 +5,8 @@ import com.moinchallenge.dto.request.SignRequest;
 import com.moinchallenge.dto.response.ApiResponse;
 import com.moinchallenge.dto.response.LoginResponse;
 import com.moinchallenge.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserRestController {
     private final UserService userService;
 
+    @Operation(
+            summary = "회원 가입 API"
+    )
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> signup(@RequestBody @Valid SignRequest signRequest) {
         try {
@@ -45,6 +50,9 @@ public class UserRestController {
         }
     }
 
+    @Operation(
+            summary = "로그인 API"
+    )
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         try {

@@ -1,5 +1,6 @@
 package com.moinchallenge.service;
 
+import com.moinchallenge.constant.IdType;
 import com.moinchallenge.dto.request.SignRequest;
 import com.moinchallenge.entity.User;
 import com.moinchallenge.repository.UserRepository;
@@ -39,7 +40,7 @@ public class UserService {
                 .userId(request.getUserId())
                 .password(encodedPassword)
                 .name(request.getName())
-                .idType(request.getIdType())
+                .idType(IdType.fromCode(request.getIdType()))
                 .idValue(encryptedIdValue)
                 .build();
         userRepository.save(user);

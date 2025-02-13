@@ -16,7 +16,7 @@ import java.time.ZoneId;
 public class TransferService {
     private final QuoteRepository quoteRepository;
     private final UserRepository userRepository;
-    private final HistoryService historyService;
+    private final TransferHistoryService transferHistoryService;
 
     public void requestTransfer(Long quoteId) {
         Quote quote = quoteRepository.findById(quoteId)
@@ -31,11 +31,11 @@ public class TransferService {
         User user = userRepository.findByUserId(SecurityUtil.getCurrentUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        double newSum = historyService.calculateDailySum(user.getId(), quote, now);
+        double newSum = transferHistoryService.calculateDailySum(user.getId(), quote, now);
         if (!user.canTransfer(newSum)) {
             throw new IllegalArgumentException("오늘 송금 한도를 초과하였습니다.");
         }
 
-        historyService.saveTransferHistory(user, quote, now);
+        transferHistoryService.saveTransferHistory(user, quote, now);
     }
 }

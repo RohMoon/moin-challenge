@@ -26,7 +26,7 @@ public class QuoteRestController {
     private final QuoteService quoteService;
 
     @Operation(
-            summary = "송금 견적 생성",
+            summary = "송금 견적서를 갖고 오는 API",
             security = @SecurityRequirement(name = "bearer-key")
     )
     @PostMapping("/quote")
