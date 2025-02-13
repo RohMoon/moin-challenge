@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ApiResponse {
+public class BaseResponse {
+    
     private int resultCode;
     private String resultMsg;
 
-    public static ApiResponse of(int resultCode, String resultMsg) {
-        return new ApiResponse(resultCode, resultMsg);
+    public static BaseResponse of(int resultCode, String resultMsg) {
+        return new BaseResponse(resultCode, resultMsg);
     }
 }

@@ -1,7 +1,7 @@
 package com.moinchallenge.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.moinchallenge.dto.response.ApiResponse;
+import com.moinchallenge.dto.response.BaseResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,10 +23,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          AuthenticationException authException) throws IOException, ServletException {
 
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
-        ApiResponse apiResponse = ApiResponse.of(httpStatus.value(), "사용할 수 없는 토큰입니다.");
+        BaseResponse baseResponse = BaseResponse.of(httpStatus.value(), "사용할 수 없는 토큰입니다.");
 
         response.setStatus(httpStatus.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE + "; charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+        response.getWriter().write(objectMapper.writeValueAsString(baseResponse));
     }
 }
