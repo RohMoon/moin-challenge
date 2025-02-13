@@ -5,6 +5,7 @@ WORKDIR /app
 COPY gradle gradle
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
+COPY gradlew .
 
 RUN chmod +x gradlew
 RUN ./gradlew dependencies --no-daemon  # 의존성 미리 다운로드
