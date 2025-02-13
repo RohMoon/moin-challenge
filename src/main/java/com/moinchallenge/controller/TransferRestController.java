@@ -5,7 +5,9 @@ import com.moinchallenge.dto.request.TransferRequest;
 import com.moinchallenge.dto.response.ApiResponse;
 import com.moinchallenge.dto.response.DataResponse;
 import com.moinchallenge.dto.response.QuoteResponse;
+import com.moinchallenge.dto.response.TransferHistoryResponse;
 import com.moinchallenge.service.QuoteService;
+import com.moinchallenge.service.TransferHistoryService;
 import com.moinchallenge.service.TransferService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +25,12 @@ import org.springframework.web.bind.annotation.*;
 public class TransferRestController {
 
     private final TransferService transferService;
+    private final TransferHistoryService transferHistoryService;
 
+    @Operation(
+            summary = "송금 접수 요청 API",
+            security = @SecurityRequirement(name = "bearer-key")
+    )
     @PostMapping("/request")
     public ResponseEntity<?> requestTransfer(@RequestBody @Valid TransferRequest request) {
         try {
@@ -39,4 +46,12 @@ public class TransferRestController {
         }
     }
 
+    @Operation(
+            summary = "회원의 거래 이력을 가지고 오는 API",
+            security = @SecurityRequirement(name = "bearer-key")
+    )
+    @GetMapping("/list")
+    public ResponseEntity<?> getTransferHistory() {
+        return ResponseEntity.ok(transferHistoryService.getTransferHistory());
+    }
 }
