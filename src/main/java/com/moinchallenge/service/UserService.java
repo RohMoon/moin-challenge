@@ -25,15 +25,12 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 파라미터 입니다.");
         }
 
-        //이미 가입된 userId
         if (userRepository.existsByUserId(request.getUserId())) {
-            throw new IllegalArgumentException("이미 존재하는 userId 입니다.");
+            throw new IllegalArgumentException("이미 존재하는 유저 입니다.");
         }
 
-        //비밀번호 해싱
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
-        //주민등록번호 / 사업자 번호 암호화
         String encryptedIdValue = encryptionService.encrypt(request.getIdValue());
 
         User user = User.builder()
