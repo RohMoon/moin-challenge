@@ -34,7 +34,7 @@ public class TransferService {
 
         double newSum = transferHistoryService.calculateDailySum(user.getId(), quote, now);
         if (!user.canTransfer(newSum)) {
-            throw new LimitExcessException("오늘 송금 한도를 초과하였습니다.");
+            throw new LimitExcessException("오늘 송금 한도 초과 입니다.");
         }
 
         transferHistoryService.saveTransferHistory(user, quote, now);

@@ -51,7 +51,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleNegativeNumberException() {
-        NegativeNumberException ex = new NegativeNumberException("음수는 허용되지 않습니다.");
+        NegativeNumberException ex = new NegativeNumberException("송금액은 음수가 될 수 없습니다.");
         GlobalExceptionHandler handler = new GlobalExceptionHandler();
         ResponseEntity<BaseResponse> responseEntity = handler.handleNegativeNumberException(ex);
 
@@ -59,7 +59,7 @@ class GlobalExceptionHandlerTest {
         BaseResponse body = responseEntity.getBody();
         assertNotNull(body);
         assertEquals(400, body.getResultCode());
-        assertEquals("음수는 허용되지 않습니다.", body.getResultMsg());
+        assertEquals("송금액은 음수가 될 수 없습니다.", body.getResultMsg());
     }
 
     @Test

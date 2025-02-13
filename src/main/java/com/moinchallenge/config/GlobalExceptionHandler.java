@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<BaseResponse> handleNegativeNumberException(NegativeNumberException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(BaseResponse.of(HttpStatus.BAD_REQUEST.value(), exception.getMessage()));
+                .body(BaseResponse.of(HttpStatus.BAD_REQUEST.value(), "송금액은 음수가 될 수 없습니다."));
     }
 
     @ResponseBody

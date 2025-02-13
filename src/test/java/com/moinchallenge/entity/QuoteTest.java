@@ -3,11 +3,13 @@ package com.moinchallenge.entity;
 import com.moinchallenge.constant.Currency;
 import com.moinchallenge.exception.NegativeNumberException;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@AutoConfigureMockMvc
 class QuoteTest {
 
     @Test

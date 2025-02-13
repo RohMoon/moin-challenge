@@ -3,6 +3,7 @@ package com.moinchallenge.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moinchallenge.dto.request.TransferRequest;
 import com.moinchallenge.dto.response.TransferListResponse;
+import com.moinchallenge.service.JwtService;
 import com.moinchallenge.service.TransferHistoryService;
 import com.moinchallenge.service.TransferService;
 import org.junit.jupiter.api.Test;
@@ -19,11 +20,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(QuoteRestController.class)
+@WebMvcTest(TransferRestController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class TransferRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
 
     @MockBean
     private TransferService transferService;

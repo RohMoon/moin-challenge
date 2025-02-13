@@ -3,6 +3,7 @@ package com.moinchallenge.service;
 import com.moinchallenge.constant.IdType;
 import com.moinchallenge.entity.Quote;
 import com.moinchallenge.entity.User;
+import com.moinchallenge.exception.LimitExcessException;
 import com.moinchallenge.repository.QuoteRepository;
 import com.moinchallenge.repository.UserRepository;
 import com.moinchallenge.utils.SecurityUtil;
@@ -140,9 +141,9 @@ class TransferServiceTest {
             when(transferHistoryService.calculateDailySum(eq(dummyUser.getId()), eq(quote), any(LocalDateTime.class)))
                     .thenReturn(1100.0);
 
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            LimitExcessException exception = assertThrows(LimitExcessException.class,
                     () -> transferService.requestTransfer(quoteId));
-            assertEquals("오늘 송금 한도를 초과하였습니다.", exception.getMessage());
+            assertEquals("오늘 송금 한도 초과 입니다.", exception.getMessage());
         }
     }
 }
