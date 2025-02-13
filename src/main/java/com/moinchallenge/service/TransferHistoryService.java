@@ -49,8 +49,7 @@ public class TransferHistoryService {
         long todayTransferCount = transferHistoryRepository.countByUserPkAndRequestedDate(userPk, now);
         double todayTransferUsdAmount = transferHistoryRepository.sumUsdAmountByUserPkAndRequestedDate(userPk, now);
 
-        return
-                TransferListResponse.of(
+        return  TransferListResponse.of(
                         currentUserId,
                         user.getName(),
                         todayTransferCount,
