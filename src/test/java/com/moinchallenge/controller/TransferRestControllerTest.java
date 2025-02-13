@@ -1,111 +1,70 @@
 package com.moinchallenge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.moinchallenge.config.GlobalExceptionHandler;
-import com.moinchallenge.dto.request.QuoteRequest;
-import com.moinchallenge.dto.response.QuoteResponse;
-import com.moinchallenge.service.QuoteService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import com.moinchallenge.dto.request.TransferRequest;
+import com.moinchallenge.dto.response.TransferListResponse;
+import com.moinchallenge.service.TransferHistoryService;
+import com.moinchallenge.service.TransferService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
-class TransferRestControllerTest {
-    @Mock
-    private QuoteService quoteService;
+@WebMvcTest(QuoteRestController.class)
+public class TransferRestControllerTest {
 
-    @InjectMocks
-    private TransferRestController transferRestController;
-
+    @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private TransferService transferService;
+
+    @MockBean
+    private TransferHistoryService transferHistoryService;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(transferRestController)
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .build();
-        objectMapper = new ObjectMapper();
+    @Test
+    public void testRequestTransfer_Success() throws Exception {
+        TransferRequest request = new TransferRequest(1L);
+
+        mockMvc.perform(post("/transfer/request")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value(200))
+                .andExpect(jsonPath("$.resultMsg").value("OK"));
     }
 
     @Test
-    @DisplayName("견적 생성 - 성공 케이스(200 OK)")
-    void getQuote_success() throws Exception {
-        // given
-        QuoteRequest quoteRequest = new QuoteRequest(10000, "USD");
-        String requestJson = objectMapper.writeValueAsString(quoteRequest);
+    public void testGetTransferHistory_Success() throws Exception {
+        TransferListResponse transferListResponse = new TransferListResponse(
+                "test@example.com",
+                "Test User",
+                3,
+                1000.0,
+                null
+        );
 
-        QuoteResponse mockResponse = new QuoteResponse("quoteId-123", 1300.5, "2025-02-08 12:00:00", 70.0);
-        when(quoteService.calculateQuote(any(QuoteRequest.class)))
-                .thenReturn(mockResponse);
+        Mockito.when(transferHistoryService.getTransferHistory()).thenReturn(transferListResponse);
 
-        // when & then
-        mockMvc.perform(post("/transfer/quote")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isOk()) // 200
+        mockMvc.perform(get("/transfer/list"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value(200))
                 .andExpect(jsonPath("$.resultMsg").value("OK"))
-                .andExpect(jsonPath("$.data.quoteId").value("quoteId-123"))
-                .andExpect(jsonPath("$.data.exchangeRate").value(1300.5))
-                .andExpect(jsonPath("$.data.targetAmount").value(70.0))
-                .andExpect(jsonPath("$.data.expireTime").value("2025-02-08 12:00:00"));
-
-        verify(quoteService, times(1)).calculateQuote(any(QuoteRequest.class));
-    }
-
-    @Test
-    @DisplayName("견적 생성 - 잘못된 파라미터(IllegalArgumentException → 400)")
-    void getQuote_badRequest() throws Exception {
-        // given
-        QuoteRequest quoteRequest = new QuoteRequest(1, "USD");
-        String requestJson = objectMapper.writeValueAsString(quoteRequest);
-
-        doThrow(new IllegalArgumentException("송금액은 음수가 될 수 없습니다."))
-                .when(quoteService).calculateQuote(any(QuoteRequest.class));
-
-        // when & then
-        mockMvc.perform(post("/transfer/quote")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isBadRequest()) // 400
-                .andExpect(jsonPath("$.resultCode").value(400))
-                .andExpect(jsonPath("$.resultMsg").value("송금액은 음수가 될 수 없습니다."));
-
-        verify(quoteService, times(1)).calculateQuote(any(QuoteRequest.class));
-    }
-
-    @Test
-    @DisplayName("견적 생성 - 서버 내부 예외(RuntimeException → 500)")
-    void getQuote_serverError() throws Exception {
-        // given
-        QuoteRequest quoteRequest = new QuoteRequest(10000, "USD");
-        String requestJson = objectMapper.writeValueAsString(quoteRequest);
-
-        doThrow(new RuntimeException("DB 연결 오류"))
-                .when(quoteService).calculateQuote(any(QuoteRequest.class));
-
-        // when & then
-        mockMvc.perform(post("/transfer/quote")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isInternalServerError()) // 500
-                .andExpect(jsonPath("$.resultCode").value(500))
-                .andExpect(jsonPath("$.resultMsg").value("알 수 없는 에러 입니다."));
-
-        verify(quoteService, times(1)).calculateQuote(any(QuoteRequest.class));
+                .andExpect(jsonPath("$.userId").value("test@example.com"))
+                .andExpect(jsonPath("$.name").value("Test User"))
+                .andExpect(jsonPath("$.todayTransferCount").value(3))
+                .andExpect(jsonPath("$.todayTransferUsdAmount").value(1000.0));
     }
 }
