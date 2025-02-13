@@ -2,6 +2,7 @@ package com.moinchallenge.service;
 
 import com.moinchallenge.entity.Quote;
 import com.moinchallenge.entity.User;
+import com.moinchallenge.exception.LimitExcessException;
 import com.moinchallenge.repository.QuoteRepository;
 import com.moinchallenge.repository.UserRepository;
 import com.moinchallenge.utils.SecurityUtil;
@@ -33,7 +34,7 @@ public class TransferService {
 
         double newSum = transferHistoryService.calculateDailySum(user.getId(), quote, now);
         if (!user.canTransfer(newSum)) {
-            throw new IllegalArgumentException("오늘 송금 한도를 초과하였습니다.");
+            throw new LimitExcessException("오늘 송금 한도를 초과하였습니다.");
         }
 
         transferHistoryService.saveTransferHistory(user, quote, now);

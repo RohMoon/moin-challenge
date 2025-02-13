@@ -32,19 +32,16 @@ public class TransferHistoryService {
     }
 
     public TransferListResponse getTransferHistory() {
-        // 현재 사용자 정보 조회 (SecurityUtil 사용)
         String currentUserId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findByUserId(currentUserId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         Long userPk = user.getId();
 
-        // 전체 거래 내역 조회
         List<TransferHistory> historyList = transferHistoryRepository.findByUserPkOrderByRequestedDateDesc(userPk);
         List<TransferHistoryResponse> historyDtoList = historyList.stream()
                 .map(TransferHistoryResponse::from)
                 .toList();
 
-        // 오늘 기준 거래 건수 및 USD 송금액 계산
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         long todayTransferCount = transferHistoryRepository.countByUserPkAndRequestedDate(userPk, now);
         double todayTransferUsdAmount = transferHistoryRepository.sumUsdAmountByUserPkAndRequestedDate(userPk, now);

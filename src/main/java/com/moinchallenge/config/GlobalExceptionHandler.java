@@ -1,6 +1,7 @@
 package com.moinchallenge.config;
 
 import com.moinchallenge.dto.response.BaseResponse;
+import com.moinchallenge.exception.LimitExcessException;
 import com.moinchallenge.exception.NegativeNumberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(BaseResponse.of(HttpStatus.BAD_REQUEST.value(), exception.getMessage()));
+    }
+
+    @ResponseBody
+    @ExceptionHandler(LimitExcessException.class)
+    public ResponseEntity<BaseResponse> handleLimitExcessException(LimitExcessException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(BaseResponse.of(HttpStatus.BAD_REQUEST.value(), "오늘 송금 한도 초과 입니다."));
     }
 
     @ExceptionHandler(Exception.class)
