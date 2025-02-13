@@ -55,7 +55,7 @@ public class JwtService {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            return claims.get("username", String.class);
+            return claims.get("userId", String.class);
         } catch (Exception e) {
             return null;
         }
