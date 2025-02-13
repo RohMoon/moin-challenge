@@ -42,30 +42,16 @@ public class Quote {            // 저장없이 REDIS 저장 고려
             String userId
     ) {
 
-        // 1) 금액 검증 (양의 정수만 가능)
         QuoteValidator.validAmountIsPositive(amount);
 
-        // 2) 수수료 계산 (각 통화별 로직)
-        // USD
-        // 1~1,000,000 => 1000원 + 0.2%
-        // 1,000,000 초과 => 3000원 + 0.1%
-        // JPY => 고정 3000, 0.5%
         long fee = calculateFee(amount, targetCurrency);
 
-        // 3) 순액(net) = amount - fee
         double netRemittanceAmount = amount - fee;
         QuoteValidator.validNetAmountIsPositive(netRemittanceAmount);
 
-        // 5) 수취 금액 = net / exchangeRate
         double targetAmount = calculateTargetAmount(exchangeRate, netRemittanceAmount);
         QuoteValidator.validTargetAmountIsPositive(targetAmount);
 
-        // 4) 환율 가져오기
-        // e.g. targetCurrency= "JPY" => "FRX.KRWJPY"
-
-        // 6) 소수점 자리수 → Java Util Currency defaultFractionDigits 적용
-        // 예: USD => 2자리, JPY => 0자리 ...
-        // 그냥 예시로서, 실무에서는 Currency.getInstance("JPY").getDefaultFractionDigits()
         targetAmount = roundTo(targetAmount, targetCurrency.getFractionDigits());
 
         LocalDateTime expireAt = calculateExpireTime();
@@ -93,9 +79,6 @@ public class Quote {            // 저장없이 REDIS 저장 고려
         return Math.round(value * scale) / scale;
     }
 
-    /**
-     * 통화별 수수료 계산
-     */
     private static long calculateFee(long amount, Currency targetCurrency) {
         if (Currency.USD == targetCurrency) {
             if (amount <= 1_000_000) {
@@ -110,12 +93,8 @@ public class Quote {            // 저장없이 REDIS 저장 고려
             throw new IllegalArgumentException("지원하지 않는 통화입니다.");
         }
     }
-
-    /**
-     * **검증 로직을 캡슐화한 내부 클래스**
-     * - `Quote` 내부에서만 사용 가능하도록 `private static`으로 설정
-     */
     private static class QuoteValidator {
+
         private static void validAmountIsPositive(long amount) {
             if (amount <= 0) {
                 throw new NegativeNumberException("송금액은 음수가 될 수 없습니다.");
