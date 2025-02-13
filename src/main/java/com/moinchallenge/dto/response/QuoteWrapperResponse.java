@@ -3,7 +3,6 @@ package com.moinchallenge.dto.response;
 import lombok.*;
 
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuoteWrapperResponse extends BaseResponse {

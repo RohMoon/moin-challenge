@@ -12,8 +12,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class TransferListResponse {
-    private int resultCode;
-    private String resultMsg;
     private String userId;
     private String name;
     private long todayTransferCount;
@@ -26,8 +24,6 @@ public class TransferListResponse {
                                           double todayTransferUsdAmount,
                                           List<TransferHistoryResponse> history) {
         return TransferListResponse.builder()
-                .resultCode(200)
-                .resultMsg("OK")
                 .userId(userId)
                 .name(userName)
                 .todayTransferCount(todayTransferCount)

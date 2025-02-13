@@ -56,7 +56,6 @@ public class TransferHistoryService {
                         todayTransferCount,
                         todayTransferUsdAmount,
                         historyDtoList
-
                 );
     }
 

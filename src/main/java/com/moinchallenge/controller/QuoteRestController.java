@@ -28,10 +28,10 @@ public class QuoteRestController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @PostMapping("/quote")
-    public ResponseEntity<?> getQuote(@RequestBody @Valid QuoteRequest request) {
-            QuoteResponse quote = quoteService.calculateQuote(request);
-            return ResponseEntity.ok()
-                    .body(QuoteWrapperResponse.of(200, "OK", quote));
+    public ResponseEntity<QuoteWrapperResponse> getQuote(@RequestBody @Valid QuoteRequest request) {
+        QuoteResponse quoteResponse = quoteService.calculateQuote(request);
+        return ResponseEntity.ok()
+                .body(QuoteWrapperResponse.of(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), quoteResponse));
 
     }
 }
