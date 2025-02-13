@@ -1,6 +1,5 @@
 package com.moinchallenge.entity;
 
-import com.moinchallenge.config.PersonalInfoEncryptor;
 import com.moinchallenge.constant.IdType;
 import jakarta.persistence.*;
 import lombok.*;
