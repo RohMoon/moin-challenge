@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM gradle:8.5-jdk17 AS build
 
 WORKDIR /app
 
@@ -7,10 +7,15 @@ COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY gradlew .
 
-RUN chmod +x gradlew
-RUN ./gradlew dependencies --no-daemon  # 의존성 미리 다운로드
-
 COPY . .
-RUN ./gradlew bootJar  # Spring Boot JAR 빌드
+RUN ./gradlew build --no-daemon
 
-CMD ["java", "-jar", "build/libs/moin-challenge-0.0.1-SNAPSHOT.jar"]
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+COPY --from=build /app/build/libs/moin-challenge-0.0.1-SNAPSHOT.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+EXPOSE 8080
