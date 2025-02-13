@@ -21,8 +21,8 @@ public class ApiResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         Class<?> clazz = returnType.getParameterType();
-        return !(ApiResponse.class.isAssignableFrom(clazz))
-                || DataResponse.class.isAssignableFrom(clazz);
+        return !(ApiResponse.class.isAssignableFrom(clazz)
+                || DataResponse.class.isAssignableFrom(clazz));
     }
 
     @Override
